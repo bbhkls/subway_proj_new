@@ -11,7 +11,7 @@ with DAG(
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
-  template_searchpath='/var/dags/dags_lisa/subway_model/subway_airflow',
+  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj',
 ) as dag:
     
 # Заполнение Hub с помощью dbt
@@ -19,7 +19,7 @@ with DAG(
         task_id = "ins_hub",
         bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
         + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-        + f"&& dbt run --models models/example/ins_to_hub.sql", 
+        + "&& dbt run --models models/example/ins_to_hub.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
       )
     
     hub_upd = PostgresOperator(

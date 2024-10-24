@@ -22,7 +22,7 @@ with DAG(
           task_id="ins_new_or_modif",
           bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
           + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + f"&& dbt run --models models/example/ins_new_or_modif_sat.sql", 
+          + "&& dbt run --models models/example/ins_new_or_modif_sat.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
       )
     
     # Данные, которые были удалены
@@ -30,7 +30,7 @@ with DAG(
           task_id="ins_del",
           bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
           + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + f"&& dbt run --models models/example/ins_del_sat.sql", 
+          + "&& dbt run --models models/example/ins_del_sat.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
       )
     
     # Объединение данных для вставки
@@ -38,7 +38,7 @@ with DAG(
           task_id="ins_union",
           bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
           + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + f"&& dbt run --models models/example/ins_to_sat.sql", 
+          + "&& dbt run --models models/example/ins_to_sat.sql", 
       )
     
     # Вставка всех записей в сателит
