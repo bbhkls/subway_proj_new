@@ -1,0 +1,3 @@
+[submodule "sybway_dbt"]
+	path = sybway_dbt
+	url = https://github.com/mmmGaya/sybway_dbt
