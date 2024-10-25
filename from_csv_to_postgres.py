@@ -64,7 +64,7 @@ with DAG(
     # upd_meta = PostgresOperator(
     #     task_id = 'update_meta',
     #     postgres_conn_id = 'dbt_postgres',
-    #     sql = 'subway_sqripts/merge_metadata.sql',
+    #     sql = 'sql_scripts/merge_metadata.sql',
     #     params = {"run_id" : "{{ run_id}}", "execution_date" : "{{ execution_date }}", "param1" : "csv"},
     #     dag = dag_n,
     # )

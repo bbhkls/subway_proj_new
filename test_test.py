@@ -4,7 +4,7 @@ from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from datetime import datetime
 
 with DAG(
-    dag_id = 'L_test_dag',
+    dag_id = 'L_master_dag',
     #schedule_interval= '* */1 * * *',
     schedule_interval= None,
     catchup=False,
@@ -96,7 +96,7 @@ with DAG(
     # Обновляем METА данные о выгрузке в таблице
     trigger_meta_mod = TriggerDagRunOperator(
         task_id='meta_mod',
-        trigger_dag_id='L_source_csv_dim',
+        trigger_dag_id='L_source_csv_meta',
         execution_date='{{ execution_date }}',
         trigger_run_id='{{ run_id }}',
         reset_dag_run=True,

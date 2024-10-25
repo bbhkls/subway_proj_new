@@ -30,7 +30,9 @@ with DAG(
           task_id="ins_del",
           bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
           + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + "&& dbt run --models models/example/ins_del_sat.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
+          #+ "&& dbt run --models models/example/ins_del_sat.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
+          + "&& dbt run --models models/example/ins_del_sats_test.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
+
       )
     
     # Объединение данных для вставки
