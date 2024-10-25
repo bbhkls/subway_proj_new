@@ -11,7 +11,7 @@ with DAG(
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
-  template_searchpath='/var/dags/dags_lisa/subway_model/subway_airflow',
+  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj',
 ) as dag:
     
 # Заполнение Satellite с помощью dbt
@@ -21,7 +21,7 @@ with DAG(
           task_id="ins_modif",
           bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
           + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + f"&& dbt run --models models/example/ins_modif_pit.sql", 
+          + "&& dbt run --models models/example/ins_modif_pit.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
       )
     
     # Вставка записей о новых экземпляров
@@ -29,7 +29,7 @@ with DAG(
           task_id="ins_new",
           bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
           + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + f"&& dbt run --models models/example/ins_new_pit.sql", 
+          + "&& dbt run --models models/example/ins_new_pit.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
       )
     
     # Объединение данных для вставки
@@ -52,7 +52,7 @@ with DAG(
     pit_not_del_upd = PostgresOperator(
         task_id = "not_del_upd",
         postgres_conn_id = 'dbt_postgres',
-        sql = 'subway_sqripts/update_not_del_pit.sql',
+        sql = 'sql_scripts/update_not_del_pit.sql',
         dag = dag, 
     )
 
@@ -60,7 +60,7 @@ with DAG(
     pit_del_upd = PostgresOperator(
         task_id = "del_upd",
         postgres_conn_id = 'dbt_postgres',
-        sql = 'subway_sqripts/update_del_pit.sql',
+        sql = 'sql_scripts/update_del_pit.sql',
         dag = dag, 
     )
 
