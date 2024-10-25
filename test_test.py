@@ -16,7 +16,6 @@ with DAG(
         task_id='ora_post',
         trigger_dag_id='L_from_ora_to_postgres',
         execution_date='{{ execution_date }}',
-        trigger_run_id='{{ run_id }}',
         reset_dag_run=True,
     )
 
@@ -40,14 +39,13 @@ with DAG(
     )
 
     #  Модификация Satellite объекта
-    # trigger_sat_mod = TriggerDagRunOperator(
-    #     task_id='sat_mod',
-    #     trigger_dag_id='L_source_csv_sat',
-    #     execution_date='{{ execution_date }}',
-    #     trigger_run_id='{{ run_id }}',
-    #     reset_dag_run=True,
-    #     wait_for_completion = True,
-    # )
+    trigger_sat_mod = TriggerDagRunOperator(
+        task_id='sat_mod',
+        trigger_dag_id='L_source_csv_sat',
+        execution_date='{{ execution_date }}',
+        trigger_run_id='{{ run_id }}',
+        reset_dag_run=True,
+        wait_for_completion = True,
+    )
 
-    trigger_ora_post >> trigger_cut_ods >> trigger_hub_mod
-    #[trigger_hub_mod, trigger_sat_mod]
+    trigger_ora_post >> trigger_cut_ods >> [trigger_hub_mod, trigger_sat_mod]

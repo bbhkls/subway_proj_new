@@ -12,7 +12,7 @@ with DAG(
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
-  template_searchpath='/var/dags/dags_lisa/subway_model/subway_airflow',
+  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj',
 ) as dag:
     
 # Заполнение Satellite с помощью dbt
@@ -53,7 +53,7 @@ with DAG(
     satelite_upd = PostgresOperator(
         task_id = "update_satelite",
         postgres_conn_id = 'dbt_postgres',
-        sql = 'subway_sqripts/update_sat.sql',
+        sql = 'sql_scripts/update_sat.sql',
         dag = dag, 
     )
 
