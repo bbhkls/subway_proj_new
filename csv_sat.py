@@ -12,7 +12,7 @@ with DAG(
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
-  template_searchpath='/var/dags/dags_lisa/subway_model/subway_airflow',
+  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj',
 ) as dag:
     
 # Заполнение Satellite с помощью dbt
@@ -22,7 +22,7 @@ with DAG(
           task_id="ins_new_or_modif",
           bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
           + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + f"&& dbt run --models models/example/ins_new_or_modif_sat.sql", 
+          + "&& dbt run --models models/example/ins_new_or_modif_sat.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
       )
     
     # Данные, которые были удалены
@@ -30,7 +30,9 @@ with DAG(
           task_id="ins_del",
           bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
           + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + f"&& dbt run --models models/example/ins_del_sat.sql", 
+          #+ "&& dbt run --models models/example/ins_del_sat.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
+          + "&& dbt run --models models/example/ins_del_sats_test.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
+
       )
     
     # Объединение данных для вставки
@@ -38,7 +40,7 @@ with DAG(
           task_id="ins_union",
           bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
           + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + f"&& dbt run --models models/example/ins_to_sat.sql", 
+          + "&& dbt run --models models/example/ins_to_sat.sql", 
       )
     
     # Вставка всех записей в сателит
@@ -53,7 +55,7 @@ with DAG(
     satelite_upd = PostgresOperator(
         task_id = "update_satelite",
         postgres_conn_id = 'dbt_postgres',
-        sql = 'subway_sqripts/update_sat.sql',
+        sql = 'sql_scripts/update_sat.sql',
         dag = dag, 
     )
 
