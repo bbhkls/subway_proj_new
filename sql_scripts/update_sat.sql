@@ -9,6 +9,4 @@ dbt_schema."GPR_RV_S_CLIENT"
 WHERE actual_flg = 1
 GROUP BY client_rk, actual_flg
 HAVING COUNT(*) > 1
-);
-
-COMMIT;
+)
