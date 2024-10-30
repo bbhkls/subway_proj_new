@@ -53,7 +53,8 @@ with DAG(
     e_satelite_upd = PostgresOperator(
         task_id = "update_e_satelite",
         postgres_conn_id = 'dbt_postgres',
-        sql = 'sql_scripts/update_e_sat.sql',
+        sql = 'sql_scripts/update_(e_)sat.sql',
+        params = {"param1" : "GPR_RV_E_CLIENT"},
         dag = dag, 
     )
 
