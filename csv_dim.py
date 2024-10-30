@@ -7,11 +7,11 @@ from airflow.operators.empty import EmptyOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 with DAG(
-  dag_id="L_source_csv_hub", 
+  dag_id="L_source_csv_dim", 
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
-  template_searchpath='/var/dags/dags_lisa/subway_model/subway_airflow',
+  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj',
 ) as dag:
 
 # Заполнение DIM с помощью dbt
@@ -19,7 +19,7 @@ with DAG(
         task_id = "ins_dbt_dim",
         bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
         + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-        + f"&& dbt run --models models/example/ins_to_dim.sql", 
+        + "&& dbt run --models models/example/ins_to_dim.sql  --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
       )
     
     dim_ins = PostgresOperator(
@@ -33,7 +33,8 @@ with DAG(
     dim_dttm_upd = PostgresOperator(
         task_id = "dim_dttm_upd",
         postgres_conn_id = 'dbt_postgres',
-        sql = 'subway_sqripts/update_dim.sql',
+        sql = 'sql_scripts/update_dim.sql',
+        params = {"run_id": "{{ run_id}}", "execution_date":"{{execution_date}}"},
         dag = dag, 
     )
     
