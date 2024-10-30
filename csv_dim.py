@@ -34,6 +34,7 @@ with DAG(
         task_id = "dim_dttm_upd",
         postgres_conn_id = 'dbt_postgres',
         sql = 'sql_scripts/update_dim.sql',
+        params = {"run_id": "{{ run_id}}", "execution_date":"{{execution_date}}"},
         dag = dag, 
     )
     
