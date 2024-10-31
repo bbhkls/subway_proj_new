@@ -8,11 +8,11 @@ from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 with DAG(
-  dag_id="L_source_csv_sat", 
+  dag_id="A_source_csv_sat", 
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
-  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj',
+  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj/sql_scripts/client_sql',
 ) as dag:
     
 # Заполнение Satellite с помощью dbt
@@ -31,7 +31,7 @@ with DAG(
           bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
           + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
           #+ "&& dbt run --models models/example/ins_del_sat.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
-          + "&& dbt run --models models/example/ins_del_sats_test.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
+          + "&& dbt run --models models/example/ins_del_sat_macros.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
 
       )
     
@@ -51,11 +51,13 @@ with DAG(
         dag = dag, 
     )
     
-    # Обновляем флаги в Satellite
+   # Обновляем флаги в Satellite
     satelite_upd = PostgresOperator(
         task_id = "update_satelite",
         postgres_conn_id = 'dbt_postgres',
-        sql = 'sql_scripts/update_sat.sql',
+        #sql = 'sql_scripts/update_sat.sql',
+        sql = 'update_(e_)sat.sql',
+        params = {"param1" : "GPR_RV_S_CLIENT"},
         dag = dag, 
     )
 

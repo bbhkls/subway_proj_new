@@ -53,11 +53,11 @@ def from_ora_to_csv_with_date(execution_date) :
             
 
 with DAG(
-  dag_id="L_from_ora_to_postgres", 
+  dag_id="A_from_ora_to_postgres", 
   start_date=datetime.datetime(2024, 10, 14),
   schedule_interval = None,
   catchup=False,
-  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj',
+  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj/sql_scripts/client_sql',
 ) as dag_n:
     
     # Добавление данных о текущей выгрузке в таблицу
