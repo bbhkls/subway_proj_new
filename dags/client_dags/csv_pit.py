@@ -11,7 +11,7 @@ with DAG(
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
-  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj/sql_scripts/client_sql',
+  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj/sql_scripts',
 ) as dag:
     
 # Заполнение Satellite с помощью dbt
@@ -53,7 +53,7 @@ with DAG(
         task_id = "not_del_upd",
         postgres_conn_id = 'dbt_postgres',
         sql = 'update_not_del_pit.sql',
-        params = {"run_id": "{{ run_id}}", "execution_date":"{{execution_date}}"},
+        params = {"run_id": "{{ run_id}}", "execution_date":"{{execution_date}}", "dim":"CLIENT"},
         dag = dag, 
     )
 
@@ -62,7 +62,7 @@ with DAG(
         task_id = "del_upd",
         postgres_conn_id = 'dbt_postgres',
         sql = 'update_del_pit.sql',
-        params = {"run_id": "{{ run_id}}", "execution_date":"{{execution_date}}"},
+        params = {"run_id": "{{ run_id}}", "execution_date":"{{execution_date}}", "dim":"CLIENT"},
         dag = dag, 
     )
 
