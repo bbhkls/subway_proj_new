@@ -53,7 +53,7 @@ def from_ora_to_csv_with_date(execution_date) :
             
 
 with DAG(
-  dag_id="L_from_ora_to_postgres", 
+  dag_id="L_from_ora_to_postgres_client", 
   start_date=datetime.datetime(2024, 10, 14),
   schedule_interval = None,
   catchup=False,

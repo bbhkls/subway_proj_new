@@ -7,11 +7,11 @@ from airflow.operators.empty import EmptyOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 with DAG(
-  dag_id="L_source_csv_e_sat", 
+  dag_id="L_source_csv_e_sat_client", 
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
-  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj',
+  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj/sql_scripts/client_sql',
 ) as dag:
     
 # Заполнение Satellite с помощью dbt
@@ -52,7 +52,7 @@ with DAG(
     e_satelite_upd = PostgresOperator(
         task_id = "update_e_satelite",
         postgres_conn_id = 'dbt_postgres',
-        sql = 'sql_scripts/update_(e_)sat.sql',
+        sql = 'update_(e_)sat.sql',
         params = {"param1" : "GPR_RV_E_CLIENT"},
         dag = dag, 
     )

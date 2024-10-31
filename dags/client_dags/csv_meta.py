@@ -7,7 +7,7 @@ from airflow.operators.empty import EmptyOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 with DAG(
-  dag_id="L_source_csv_meta", 
+  dag_id="L_source_csv_meta_client", 
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
@@ -18,7 +18,7 @@ with DAG(
         task_id = 'update_meta',
         postgres_conn_id = 'dbt_postgres',
         sql = 'sql_scripts/merge_metadata.sql',
-        params = {"run_id" : "{{ run_id}}", "execution_date" : "{{ execution_date }}", "param1" : "csv"},
+        params = {"run_id" : "{{ run_id}}", "execution_date" : "{{ execution_date }}", "param1" : "ods_client_cut"},
         dag = dag,
     )
 
