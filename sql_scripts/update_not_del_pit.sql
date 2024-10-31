@@ -5,11 +5,11 @@ with ad_tab as (
 	select client_rk, '{{run_id}}' dataflow_id, '{{execution_date}}'::timestamp dataflow_dttm, 
 	       valid_to_dttm, valid_from_dttm,
 		   lead(valid_from_dttm, 1, valid_to_dttm) over (partition by client_rk, valid_to_dttm order by valid_from_dttm) ld
-	from dbt_schema."GPR_BV_P_CLIENT")
+	from dbt_schema."GPR_BV_P_{{params.dim}}")
 	where valid_to_dttm <> ld
 )
 
-update dbt_schema."GPR_BV_P_CLIENT" pc
+update dbt_schema."GPR_BV_P_{{params.dim}}" pc
 set (dataflow_id, dataflow_dttm, valid_to_dttm) = (select dataflow_id, dataflow_dttm, ld - interval '1 minute'
 					   							   from ad_tab
 							    				   where pc.client_rk = client_rk)
