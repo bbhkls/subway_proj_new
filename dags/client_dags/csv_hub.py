@@ -7,7 +7,7 @@ from airflow.operators.empty import EmptyOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 with DAG(
-  dag_id="L_source_csv_hub", 
+  dag_id="L_source_csv_hub_client", 
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
