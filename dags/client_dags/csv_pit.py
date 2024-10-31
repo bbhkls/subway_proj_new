@@ -53,6 +53,7 @@ with DAG(
         task_id = "not_del_upd",
         postgres_conn_id = 'dbt_postgres',
         sql = 'update_not_del_pit.sql',
+        params = {"run_id": "{{ run_id}}", "execution_date":"{{execution_date}}"},
         dag = dag, 
     )
 
@@ -61,6 +62,7 @@ with DAG(
         task_id = "del_upd",
         postgres_conn_id = 'dbt_postgres',
         sql = 'update_del_pit.sql',
+        params = {"run_id": "{{ run_id}}", "execution_date":"{{execution_date}}"},
         dag = dag, 
     )
 

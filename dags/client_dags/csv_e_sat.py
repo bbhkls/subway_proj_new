@@ -25,14 +25,11 @@ with DAG(
       )
     
     # Данные, которые были удалены
-    # Изменена модель dbt ins_del_e_sat_test
-    ins_del_val = BashOperator(
-          task_id="ins_del",
-          bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
-          + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          # + "&& dbt run --models models/example/ins_del_e_sat.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
-          + "&& dbt run --models models/example/ins_del_e_sat_macros.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
-          
+    ins_del_val = BashOperator( 
+          task_id="ins_del", 
+          bash_command=f"cd /home/anarisuto-12/dbt/subway_project"  
+          + '&& source /home/anarisuto-12/dbt/venv/bin/activate'  
+          + "&& dbt run --models models/example/ins_del_e_sat_macros.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'",  
       )
     
     # Объединение данных для вставки
@@ -54,9 +51,8 @@ with DAG(
     e_satelite_upd = PostgresOperator(
         task_id = "update_e_satelite",
         postgres_conn_id = 'dbt_postgres',
-        #sql = 'sql_scripts/update_e_sat.sql',
         sql = 'update_(e_)sat.sql',
-        params = {"param1" :  "GPR_RV_E_CLIENT"},
+        params = {"param1" : "GPR_RV_E_CLIENT"},
         dag = dag, 
     )
     
