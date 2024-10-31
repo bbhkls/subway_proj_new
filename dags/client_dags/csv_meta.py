@@ -18,7 +18,7 @@ with DAG(
         task_id = 'update_meta',
         postgres_conn_id = 'dbt_postgres',
         sql = 'sql_scripts/merge_metadata.sql',
-        params = {"run_id" : "{{ run_id}}", "execution_date" : "{{ execution_date }}", "param1" : "csv"},
+        params = {"run_id" : "{{ run_id}}", "execution_date" : "{{ execution_date }}", "param1" : "ods_client_cut"},
         dag = dag,
     )
 
