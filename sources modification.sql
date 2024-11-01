@@ -22,9 +22,7 @@ create table receipt_post(
 	cnt integer, 
 	price float(2), 
 	combo_group integer, 
-	tovar_group integer,
-	primary key(id_operation, id_seller, id_buyer, id_product, id_product_connection, sel_dttm)
- );
+	tovar_group integer);
   
 -- DROP
 drop table profile_card_post;
@@ -61,19 +59,24 @@ select 4 id, 631626513 card_num, 'Буров Артем Александрови
 -- serps.receipt_post
 insert into serps.receipt_post --(id_operation, id_seller, id_buyer, id_product, id_product_connection, id_disc_card, sel_dttm, cnt, price, combo_group, tovar_group)
 select 1 id_operation, 1 id_seller, 1 id_buyer, 1 id_product, null id_product_connection, 
-	   312841712 id_disc_card, '27-10-2024 14:20:31'::timestamp sel_dttm, 2 cnt, 50 price, null combo_group, 1 tovar_group
-union all
+	   312841712 id_disc_card, '27-10-2024 14:20:31'::timestamp sel_dttm, 2 cnt, 50 price, null combo_group, 1 tovar_group;
+	  
+insert into serps.receipt_post
 select 1 id_operation, 1 id_seller, 1 id_buyer, 2 id_product, null id_product_connection, 
-	   312841712 id_disc_card, '27-10-2024 14:20:31'::timestamp sel_dttm, 1 cnt, 100 price, 1 combo_group, 2 tovar_group
-union all
+	   312841712 id_disc_card, '27-10-2024 14:20:31'::timestamp sel_dttm, 1 cnt, 100 price, 1 combo_group, 2 tovar_group;
+	  
+insert into serps.receipt_post
 select 1 id_operation, 1 id_seller, 1 id_buyer, 3 id_product, null id_product_connection, 
-	   312841712 id_disc_card, '27-10-2024 14:20:31'::timestamp sel_dttm, 1 cnt, 200 price, 1 combo_group, 2 tovar_group
-union all
+	   312841712 id_disc_card, '27-10-2024 14:20:31'::timestamp sel_dttm, 1 cnt, 200 price, 1 combo_group, 2 tovar_group;
+
+insert into serps.receipt_post
 select 2 id_operation, 1 id_seller, 2 id_buyer, 3 id_product, null id_product_connection, 
-	   108671570 id_disc_card, '27-10-2024 14:41:23'::timestamp sel_dttm, 2 cnt, 200 price, null combo_group, 1 tovar_group
-union all
+	   108671570 id_disc_card, '27-10-2024 14:41:23'::timestamp sel_dttm, 2 cnt, 200 price, null combo_group, 1 tovar_group;
+
+insert into serps.receipt_post
 select 2 id_operation, 1 id_seller, 1 id_buyer, 12 id_product, 3 id_product_connection, 
-	   108671570 id_disc_card, '27-10-2024 14:41:23'::timestamp sel_dttm, -1 cnt, 20 price, null combo_group, 1 tovar_group
-union all
+	   108671570 id_disc_card, '27-10-2024 14:41:23'::timestamp sel_dttm, -1 cnt, 20 price, null combo_group, 1 tovar_group;
+	  
+insert into serps.receipt_post
 select 3 id_operation, 5 id_seller, 10 id_buyer, 24 id_product, null id_product_connection, 
-	   285856520 id_disc_card, '27-10-2024 20:21:15'::timestamp sel_dttm, 1 cnt, 250 price, null combo_group, 1 tovar_group
+	   285856520 id_disc_card, '28-10-2024 20:21:15'::timestamp sel_dttm, 1 cnt, 250 price, null combo_group, 1 tovar_group;

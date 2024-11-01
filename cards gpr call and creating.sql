@@ -148,9 +148,9 @@ select * from dbt_schema."GPR_BV_P_CARD";
 select * from dbt_schema."GPR_EM_DIM_CARD";
 
 -- META
-select * from dbt_schema.metadata_airflow_test mat ;
+select * from dbt_schema.metadata_airflow_test;
 
--- SELECT
+-- DELETE
 -- SOURCE
 delete from serps.profile_card_post;
 delete from serps.receipt_post;
@@ -176,4 +176,4 @@ delete from dbt_schema."GPR_BV_P_CARD";
 delete from dbt_schema."GPR_EM_DIM_CARD";
 
 -- META
-delete from dbt_schema.metadata_airflow_test ;
+delete from dbt_schema.metadata_airflow_test;
