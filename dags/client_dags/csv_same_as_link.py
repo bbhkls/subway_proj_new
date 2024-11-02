@@ -2,9 +2,9 @@ import os
 import json
 import datetime
 from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.operators.empty import EmptyOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
+from airflow.operators.python import PythonOperator
+from dags_arina.subway_fold.usefull_func.create_transform_func import run_dbt_commands
 
 with DAG(
   dag_id="A_source_csv_sal", 
@@ -15,12 +15,13 @@ with DAG(
 ) as dag:
     
 # Заполнение SAL с помощью dbt
-    sal_ins_dbt = BashOperator(
-        task_id = "ins_dbt_SAL",
-        bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
-        + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-        + "&& dbt run --models models/example/ins_to_sal.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
-      )
+    
+    transform = PythonOperator(
+        task_id = "transform",
+        python_callable = run_dbt_commands,
+        op_kwargs={"sql_sqcripts": ["ins_to_sal.sql"]},
+        dag = dag,
+    )
     
     ins_to_sal = PostgresOperator(
         task_id = "ins_to_SAL",
@@ -37,4 +38,4 @@ with DAG(
         dag = dag, 
     )
 
-sal_ins_dbt >> ins_to_sal >> sal_upd
+transform >> ins_to_sal >> sal_upd

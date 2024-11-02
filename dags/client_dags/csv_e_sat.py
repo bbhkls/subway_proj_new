@@ -2,9 +2,10 @@ import os
 import json
 import datetime
 from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.operators.empty import EmptyOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
+from airflow.operators.python import PythonOperator
+from dags_arina.subway_fold.usefull_func.create_transform_func import run_dbt_commands
+
 
 with DAG(
   dag_id="A_source_csv_e_sat", 
@@ -16,29 +17,13 @@ with DAG(
     
 # Заполнение Satellite с помощью dbt
 
-    # Данные, которые были обновлены или новые записи
-    ins_new_mod_val = BashOperator(
-          task_id="ins_new_or_modif",
-          bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
-          + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + "&& dbt run --models models/example/ins_new_or_modif_e_sat.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
-      )
     
-    # Данные, которые были удалены
-    ins_del_val = BashOperator( 
-          task_id="ins_del", 
-          bash_command=f"cd /home/anarisuto-12/dbt/subway_project"  
-          + '&& source /home/anarisuto-12/dbt/venv/bin/activate'  
-          + "&& dbt run --models models/example/ins_del_e_sat_macros.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'",  
-      )
-    
-    # Объединение данных для вставки
-    union_ins_val = BashOperator(
-          task_id="ins_union",
-          bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
-          + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + f"&& dbt run --models models/example/ins_to_e_sat.sql", 
-      )
+    transform = PythonOperator(
+        task_id = "transform",
+        python_callable = run_dbt_commands,
+        op_kwargs={"sql_sqcripts": ["ins_new_or_modif_e_sat.sql", "ins_del_e_sat_macros.sql", "ins_to_e_sat.sql"]},
+        dag = dag,
+    )
     
     # Вставка всех записей в сателит
     e_satelite_ins = PostgresOperator(
@@ -56,4 +41,4 @@ with DAG(
         dag = dag, 
     )
     
-ins_new_mod_val >> ins_del_val >> union_ins_val >> e_satelite_ins >> e_satelite_upd
+transform >> e_satelite_ins >> e_satelite_upd

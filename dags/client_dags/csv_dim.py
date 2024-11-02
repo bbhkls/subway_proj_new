@@ -3,8 +3,9 @@ import json
 import datetime
 from airflow import DAG
 from airflow.operators.bash import BashOperator
-from airflow.operators.empty import EmptyOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
+from airflow.operators.python import PythonOperator
+from dags_arina.subway_fold.usefull_func.create_transform_func import run_dbt_commands
 
 with DAG(
   dag_id="A_source_csv_dim", 
@@ -15,12 +16,12 @@ with DAG(
 ) as dag:
 
 # Заполнение DIM с помощью dbt
-    dim_ins_dbt = BashOperator(
-        task_id = "ins_dbt_dim",
-        bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
-        + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-        + "&& dbt run --models models/example/ins_to_dim.sql  --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
-      )
+    transform = PythonOperator(
+        task_id = "transform",
+        python_callable = run_dbt_commands,
+        op_kwargs={"sql_sqcripts": ["ins_to_dim.sql"]},
+        dag = dag,
+    )
     
     dim_ins = PostgresOperator(
         task_id = "ins_dim",
@@ -38,4 +39,4 @@ with DAG(
         dag = dag, 
     )
     
-dim_ins_dbt >> dim_ins >> dim_dttm_upd
+transform >> dim_ins >> dim_dttm_upd

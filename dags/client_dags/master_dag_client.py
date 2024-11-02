@@ -11,97 +11,42 @@ with DAG(
     start_date=datetime(2024, 10, 18)
 ) as dag:
     
-    # ODS слой
-    # Выгрузка из Oracle в Postgres
-    trigger_ora_post = TriggerDagRunOperator(
-        task_id='ora_post',
-        trigger_dag_id='A_from_ora_to_postgres',
-        execution_date='{{ execution_date }}',
-        reset_dag_run=True,
-    )
-
-    # Обрезка ODS таблицы по текущей выгрузке
-    trigger_cut_ods = TriggerDagRunOperator(
-        task_id='cut_ods',
-        trigger_dag_id='A_cut_ods_table',
-        execution_date='{{ execution_date }}',
-        reset_dag_run=True,
-        wait_for_completion = True,
-    )
-
-    # RV слой
-    # Модификация HUB объекта
-    trigger_hub_mod = TriggerDagRunOperator(
-        task_id='hub_mod',
-        trigger_dag_id='A_source_csv_hub',
+    
+    ALL_DAGS = [
+        
+        {'task_id' : 'ora_post', 'dag_id' : 'A_from_ora_to_postgres', 'dependes_on' : 'cut_ods'}, 
+        {'task_id' : 'cut_ods', 'dag_id' : 'A_cut_ods_table', 'dependes_on' : ['hub_mod', 'sat_mod', 'e_sat_mod']},
+        {'task_id' : 'hub_mod', 'dag_id' : 'A_source_csv_hub', 'dependes_on' : 'same_as_link_mod'},
+        {'task_id' : 'sat_mod', 'dag_id' : 'A_source_csv_sat', 'dependes_on' : 'same_as_link_mod'},
+        {'task_id' : 'e_sat_mod', 'dag_id' : 'A_source_csv_e_sat', 'dependes_on' : 'same_as_link_mod'},
+        {'task_id' : 'same_as_link_mod', 'dag_id' : 'A_source_csv_sal', 'dependes_on' : 'pit_mod'},
+        {'task_id' : 'pit_mod', 'dag_id' : 'A_source_csv_pit', 'dependes_on' : 'dim_mod'},
+        {'task_id' : 'dim_mod', 'dag_id' : 'A_source_csv_dim', 'dependes_on' : 'meta_mod'},
+        {'task_id' : 'meta_mod', 'dag_id' : 'A_source_csv_meta', 'dependes_on' : ''},
+    ]
+    
+    dbt_task = dict()
+    
+    for ind, dag in enumerate(ALL_DAGS):
+        
+        dbt_task[dag['task_id']] = TriggerDagRunOperator(
+        task_id = dag["task_id"],
+        trigger_dag_id= dag["dag_id"],
         execution_date='{{ execution_date }}',
         trigger_run_id='{{ run_id }}',
         reset_dag_run=True,
         wait_for_completion = True,
-    )
-
-    # Модификация Satellite объекта
-    trigger_sat_mod = TriggerDagRunOperator(
-        task_id='sat_mod',
-        trigger_dag_id='A_source_csv_sat',
-        execution_date='{{ execution_date }}',
-        trigger_run_id='{{ run_id }}',
-        reset_dag_run=True,
-        wait_for_completion = True,
-    )
-
-    # Модификация Effective Satellite объекта
-    trigger_e_sat_mod = TriggerDagRunOperator(
-        task_id='e_sat_mod',
-        trigger_dag_id='A_source_csv_e_sat',
-        execution_date='{{ execution_date }}',
-        trigger_run_id='{{ run_id }}',
-        reset_dag_run=True,
-        wait_for_completion = True,
-    )
-
-    # BV слой
-    # Модификация SAL объекта
-    trigger_same_as_link_mod = TriggerDagRunOperator(
-        task_id='same_as_link_mod',
-        trigger_dag_id='A_source_csv_sal',
-        execution_date='{{ execution_date }}',
-        trigger_run_id='{{ run_id }}',
-        reset_dag_run=True,
-        wait_for_completion = True,
-    )
-
-    # Модификация PIT объекта
-    trigger_pit_mod = TriggerDagRunOperator(
-        task_id='pit_mod',
-        trigger_dag_id='A_source_csv_pit',
-        execution_date='{{ execution_date }}',
-        trigger_run_id='{{ run_id }}',
-        reset_dag_run=True,
-        wait_for_completion = True,
-    )
-
-    # EM слой
-    # Модификация DIM объекта
-    trigger_dim_mod = TriggerDagRunOperator(
-        task_id='dim_mod',
-        trigger_dag_id='A_source_csv_dim',
-        execution_date='{{ execution_date }}',
-        trigger_run_id='{{ run_id }}',
-        reset_dag_run=True,
-        wait_for_completion = True,
-    )
-
-    # Заключительный этап
-    # Обновляем METА данные о выгрузке в таблице
-    trigger_meta_mod = TriggerDagRunOperator(
-        task_id='meta_mod',
-        trigger_dag_id='A_source_csv_meta',
-        execution_date='{{ execution_date }}',
-        trigger_run_id='{{ run_id }}',
-        reset_dag_run=True,
-        wait_for_completion = True,
-    )
-
-    trigger_ora_post >> trigger_cut_ods >> [trigger_hub_mod, trigger_sat_mod, trigger_e_sat_mod] >> trigger_same_as_link_mod
-    trigger_same_as_link_mod >> trigger_pit_mod >> trigger_dim_mod >> trigger_meta_mod
+        )
+        
+    
+    for ind, dag in enumerate(ALL_DAGS):
+        
+        if dag['dependes_on'] != '':
+            
+            if isinstance(dag['dependes_on'], list) :
+                for i in dag['dependes_on']:
+                    dbt_task[dag['task_id']] >> dbt_task[i]
+            else:       
+                dbt_task[dag['task_id']] >> dbt_task[dag['dependes_on']]
+    
+    

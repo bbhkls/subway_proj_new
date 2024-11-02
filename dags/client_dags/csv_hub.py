@@ -2,9 +2,9 @@ import os
 import json
 import datetime
 from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.operators.empty import EmptyOperator
+from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
+from dags_arina.subway_fold.usefull_func.create_transform_func import run_dbt_commands
 
 with DAG(
   dag_id="A_source_csv_hub", 
@@ -14,13 +14,14 @@ with DAG(
   template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj/sql_scripts/client_sql',
 ) as dag:
     
-# Заполнение Hub с помощью dbt
-    hub_ins_dbt = BashOperator(
-        task_id = "ins_hub",
-        bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
-        + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-        + "&& dbt run --models models/example/ins_to_hub.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
-      )
+# # Заполнение Hub с помощью dbt
+    transform = PythonOperator(
+        task_id = "transform",
+        python_callable = run_dbt_commands,
+        op_kwargs={"sql_sqcripts": ["ins_to_hub.sql"]},
+        dag = dag,
+    )
+   
     
     hub_upd = PostgresOperator(
         task_id = "upd_hub",
@@ -29,4 +30,4 @@ with DAG(
         dag = dag, 
     )
 
-hub_ins_dbt >> hub_upd
+transform >> hub_upd
