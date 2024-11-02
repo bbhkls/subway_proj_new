@@ -4,7 +4,7 @@ from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from datetime import datetime
 
 with DAG(
-    dag_id = 'L_master_dag_serps.receip_post',
+    dag_id = 'L_serps.receip_post_master_dag',
     #schedule_interval= '* */1 * * *',
     schedule_interval= None,
     catchup=False,
@@ -14,7 +14,7 @@ with DAG(
     # ODS слой
     # Выгрузка из Postgres в Postgres
     trigger_post_post = TriggerDagRunOperator(
-        task_id='ora_post',
+        task_id='post_post',
         trigger_dag_id='L_serps.receipt_post_to_ods',
         execution_date='{{ execution_date }}',
         reset_dag_run=True,
@@ -23,7 +23,7 @@ with DAG(
     # Обрезка ODS таблицы по текущей выгрузке
     trigger_cut_post_ods = TriggerDagRunOperator(
         task_id='cut_ods',
-        trigger_dag_id='L_cut_ods_serps.receip_post',
+        trigger_dag_id='L_serps.receip_post_cut_ods',
         execution_date='{{ execution_date }}',
         reset_dag_run=True,
         wait_for_completion = True,
@@ -32,8 +32,18 @@ with DAG(
     # RV слой
     # Модификация T_LINK объекта
     trigger_t_link_mod = TriggerDagRunOperator(
-        task_id='hub_mod',
+        task_id='t_link_mod',
         trigger_dag_id='L_source_serps.receip_post_t_link',
+        execution_date='{{ execution_date }}',
+        trigger_run_id='{{ run_id }}',
+        reset_dag_run=True,
+        wait_for_completion = True,
+    )
+
+    # Модификация HUB объекта
+    trigger_hub_mod = TriggerDagRunOperator(
+        task_id='hub_mod',
+        trigger_dag_id='L_serps.receipt_post_hub_card',
         execution_date='{{ execution_date }}',
         trigger_run_id='{{ run_id }}',
         reset_dag_run=True,
@@ -51,4 +61,4 @@ with DAG(
         wait_for_completion = True,
     )
 
-trigger_post_post >> trigger_cut_post_ods >> trigger_t_link_mod >> trigger_meta_post_mod
+trigger_post_post >> trigger_cut_post_ods >> [trigger_t_link_mod, trigger_hub_mod]>> trigger_meta_post_mod
