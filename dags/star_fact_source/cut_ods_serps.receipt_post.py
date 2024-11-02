@@ -5,7 +5,7 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 
 with DAG(
-  dag_id="L_cut_ods_serps.receip_post", 
+  dag_id="L_serps.receip_post_cut_ods", 
   start_date=datetime.datetime(2024, 10, 17),
   schedule_interval = None,
   catchup=False,
