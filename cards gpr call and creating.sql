@@ -69,6 +69,20 @@ CREATE TABLE dbt_schema."GPR_RV_S_PROFILE_CARD_POST" (
 	discount_procent_cnt integer
 );
 
+CREATE TABLE dbt_schema."GPR_RV_S_PROFILE_CLIENT_POST" (
+	dataflow_id text,
+	dataflow_dttm text,
+	source_system_dk oid,
+	client_rk text,
+	valid_from_dttm timestamp,
+	hashdiff_key text,
+	actual_flg integer,
+	delete_flg integer,
+	fio_desc varchar,
+	phone_num_desc varchar,
+	birthday_dttm date
+);
+
 CREATE TABLE dbt_schema."GPR_RV_E_CARD" (
 	dataflow_id varchar,
 	dataflow_dttm timestamp,
@@ -129,7 +143,7 @@ select * from serps.receipt_post;
 
 -- ODS
 select * from dbt_schema.ods_profile_card_post;
-select * from dbt_schema.ods_profile_card_post_cut;
+select * from dbt_schema.ods_profile_post_cut;
 
 select * from dbt_schema.ods_receipt_post;
 select * from dbt_schema.ods_receipt_post_cut;
@@ -137,6 +151,8 @@ select * from dbt_schema.ods_receipt_post_cut;
 -- RV
 select * from dbt_schema."GPR_RV_H_CARD";
 select * from dbt_schema."GPR_RV_S_PROFILE_CARD_POST";
+select * from dbt_schema."GPR_RV_S_PROFILE_CLIENT_POST";
+select * from dbt_schema."GPR_RV_E_CLIENT";
 select * from dbt_schema."GPR_RV_E_CARD";
 select * from dbt_schema."GPR_RV_T_RECEIPT_POST";
 
@@ -157,7 +173,7 @@ delete from serps.receipt_post;
 
 -- ODS
 delete from dbt_schema.ods_profile_card_post;
-delete from dbt_schema.ods_profile_card_post_cut;
+delete from dbt_schema.ods_profile_post_cut;
 
 delete from dbt_schema.ods_receipt_post;
 delete from dbt_schema.ods_receipt_post_cut;
@@ -165,6 +181,8 @@ delete from dbt_schema.ods_receipt_post_cut;
 -- RV
 delete from dbt_schema."GPR_RV_H_CARD";
 delete from dbt_schema."GPR_RV_S_PROFILE_CARD_POST";
+delete from dbt_schema."GPR_RV_S_PROFILE_CLIENT_POST";
+delete from dbt_schema."GPR_RV_E_CLIENT";
 delete from dbt_schema."GPR_RV_E_CARD";
 delete from dbt_schema."GPR_RV_T_RECEIPT_POST";
 

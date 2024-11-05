@@ -54,7 +54,7 @@ with DAG(
         task_id = "update_satelite",
         postgres_conn_id = 'dbt_postgres',
         sql = 'update_(e_)sat.sql',
-        params = {"param1" : "GPR_RV_S_CLIENT"},
+        params = {"param1" : "GPR_RV_S_CLIENT", "key_p" : "client_rk"},
         dag = dag, 
     )
 
