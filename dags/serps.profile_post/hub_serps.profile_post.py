@@ -2,9 +2,10 @@ import os
 import json
 import datetime
 from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.operators.empty import EmptyOperator
+from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
+from dags_arina.subway_fold.usefull_func.create_transform_func import run_dbt_commands
+
 
 with DAG(
   dag_id="L_serps.profile_post_hub_card", 
@@ -15,16 +16,14 @@ with DAG(
 ) as dag:
     
 # Заполнение Hub с помощью dbt
-
-    # Card
-
-    hub_ins_dbt_card = BashOperator(
-        task_id = "ins_hub_card",
-        bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
-        + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-        + "&& dbt run --models models/example/ins_to_hub_profile_card.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
-      )
+    hub_ins = PythonOperator(
+     task_id = "ins_hub_client_card",
+        python_callable = run_dbt_commands,
+        op_kwargs={"sql_sqcripts": ["ins_to_hub_profile_client.sql", "ins_to_hub_profile_card.sql"]},
+        dag = dag,
+    )
     
+    # Card
     hub_upd_card = PostgresOperator(
         task_id = "upd_hub_card",
         postgres_conn_id = 'dbt_postgres',
@@ -33,14 +32,6 @@ with DAG(
     )
 
     # Client
-
-    hub_ins_dbt_client = BashOperator(
-        task_id = "ins_hub_client",
-        bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
-        + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-        + "&& dbt run --models models/example/ins_to_hub_profile_client.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
-      )
-    
     hub_upd_client = PostgresOperator(
         task_id = "upd_hub_client",
         postgres_conn_id = 'dbt_postgres',
@@ -48,4 +39,4 @@ with DAG(
         dag = dag, 
     )
 
-[hub_ins_dbt_card, hub_ins_dbt_client] >> [hub_upd_card, hub_upd_client]
+hub_ins >> [hub_upd_card, hub_upd_client]
