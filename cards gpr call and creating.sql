@@ -149,6 +149,7 @@ select * from dbt_schema.ods_receipt_post;
 select * from dbt_schema.ods_receipt_post_cut;
 
 -- RV
+select * from dbt_schema."GPR_RV_H_CLIENT";
 select * from dbt_schema."GPR_RV_H_CARD";
 select * from dbt_schema."GPR_RV_S_PROFILE_CARD_POST";
 select * from dbt_schema."GPR_RV_S_PROFILE_CLIENT_POST";
@@ -157,10 +158,13 @@ select * from dbt_schema."GPR_RV_E_CARD";
 select * from dbt_schema."GPR_RV_T_RECEIPT_POST";
 
 -- BV
+select * from dbt_schema."GPR_BV_A_CLIENT";
 select * from dbt_schema."GPR_BV_A_CARD";
+select * from dbt_schema."GPR_BV_P_CLIENT";
 select * from dbt_schema."GPR_BV_P_CARD";
 
 -- EM
+select * from dbt_schema."GPR_EM_DIM_CLIENT";
 select * from dbt_schema."GPR_EM_DIM_CARD";
 
 -- META
@@ -179,6 +183,7 @@ delete from dbt_schema.ods_receipt_post;
 delete from dbt_schema.ods_receipt_post_cut;
 
 -- RV
+delete from dbt_schema."GPR_RV_H_CLIENT";
 delete from dbt_schema."GPR_RV_H_CARD";
 delete from dbt_schema."GPR_RV_S_PROFILE_CARD_POST";
 delete from dbt_schema."GPR_RV_S_PROFILE_CLIENT_POST";
@@ -187,10 +192,13 @@ delete from dbt_schema."GPR_RV_E_CARD";
 delete from dbt_schema."GPR_RV_T_RECEIPT_POST";
 
 -- BV
+delete from dbt_schema."GPR_BV_A_CLIENT";
 delete from dbt_schema."GPR_BV_A_CARD";
+delete from dbt_schema."GPR_BV_P_CLIENT"
 delete from dbt_schema."GPR_BV_P_CARD";
 
 -- EM
+delete from dbt_schema."GPR_EM_DIM_CLIENT";
 delete from dbt_schema."GPR_EM_DIM_CARD";
 
 -- META

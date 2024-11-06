@@ -52,7 +52,7 @@ select 1 id, 506686453 card_num, 'Зыкова Мария Игоревна' FIO,
 union all
 select 2 id, 312841712 card_num, 'Конопатов Алексей Геннадьевич' FIO, '25-04-1993'::date  birthday, '+79249185726' phone_num, 'Пятерочка' service_name, 15 discount
 union all
-select 3 id, 285856520 card_num, 'Буров Артем Александрович' FIO, '02-11-2004'::date  birthday, '+79482845932' phone_num, 'Пятерочка' service_name, 15 discount
+select 3 id, 285856520 card_num, 'Буров Артем Александрович' FIO, '02-11-2004'::date  birthday, '+79922847332' phone_num, 'Пятерочка' service_name, 15 discount
 union all
 select 4 id, 631626513 card_num, 'Буров Артем Александрович' FIO, '02-11-2004'::date  birthday, '+79482845932' phone_num, 'Пятерочка' service_name, 15 discount;
 
