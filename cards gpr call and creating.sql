@@ -33,11 +33,11 @@ CREATE TABLE dbt_schema."GPR_RV_T_RECEIPT_POST" (
 	dataflow_id varchar,
 	dataflow_dttm timestamp,
 	receip_rk varchar,
-	shop_rk varchar,
-	client_rk varchar,
+	shop_cnt integer,
+	client_cnt integer,
 	plu_rk varchar,
-	plu_x_plu_rk varchar,
-	card_rk varchar,
+	plu_x_plu_cnt integer,
+	card_cnt bigint,
 	sel_dttm timestamp, 
 	cnt integer, 
 	price float(2), 
@@ -67,6 +67,20 @@ CREATE TABLE dbt_schema."GPR_RV_S_PROFILE_CARD_POST" (
 	card_num_cnt bigint,
 	card_service_name_desc varchar,
 	discount_procent_cnt integer
+);
+
+CREATE TABLE dbt_schema."GPR_RV_S_PROFILE_CLIENT_POST" (
+	dataflow_id text,
+	dataflow_dttm text,
+	source_system_dk oid,
+	client_rk text,
+	valid_from_dttm timestamp,
+	hashdiff_key text,
+	actual_flg integer,
+	delete_flg integer,
+	fio_desc varchar,
+	phone_num_desc varchar,
+	birthday_dttm date
 );
 
 CREATE TABLE dbt_schema."GPR_RV_E_CARD" (
@@ -129,22 +143,28 @@ select * from serps.receipt_post;
 
 -- ODS
 select * from dbt_schema.ods_profile_card_post;
-select * from dbt_schema.ods_profile_card_post_cut;
+select * from dbt_schema.ods_profile_post_cut;
 
 select * from dbt_schema.ods_receipt_post;
 select * from dbt_schema.ods_receipt_post_cut;
 
 -- RV
+select * from dbt_schema."GPR_RV_H_CLIENT";
 select * from dbt_schema."GPR_RV_H_CARD";
 select * from dbt_schema."GPR_RV_S_PROFILE_CARD_POST";
+select * from dbt_schema."GPR_RV_S_PROFILE_CLIENT_POST";
+select * from dbt_schema."GPR_RV_E_CLIENT";
 select * from dbt_schema."GPR_RV_E_CARD";
 select * from dbt_schema."GPR_RV_T_RECEIPT_POST";
 
 -- BV
+select * from dbt_schema."GPR_BV_A_CLIENT";
 select * from dbt_schema."GPR_BV_A_CARD";
+select * from dbt_schema."GPR_BV_P_CLIENT";
 select * from dbt_schema."GPR_BV_P_CARD";
 
 -- EM
+select * from dbt_schema."GPR_EM_DIM_CLIENT";
 select * from dbt_schema."GPR_EM_DIM_CARD";
 
 -- META
@@ -157,22 +177,28 @@ delete from serps.receipt_post;
 
 -- ODS
 delete from dbt_schema.ods_profile_card_post;
-delete from dbt_schema.ods_profile_card_post_cut;
+delete from dbt_schema.ods_profile_post_cut;
 
 delete from dbt_schema.ods_receipt_post;
 delete from dbt_schema.ods_receipt_post_cut;
 
 -- RV
+delete from dbt_schema."GPR_RV_H_CLIENT";
 delete from dbt_schema."GPR_RV_H_CARD";
 delete from dbt_schema."GPR_RV_S_PROFILE_CARD_POST";
+delete from dbt_schema."GPR_RV_S_PROFILE_CLIENT_POST";
+delete from dbt_schema."GPR_RV_E_CLIENT";
 delete from dbt_schema."GPR_RV_E_CARD";
 delete from dbt_schema."GPR_RV_T_RECEIPT_POST";
 
 -- BV
+delete from dbt_schema."GPR_BV_A_CLIENT";
 delete from dbt_schema."GPR_BV_A_CARD";
+delete from dbt_schema."GPR_BV_P_CLIENT"
 delete from dbt_schema."GPR_BV_P_CARD";
 
 -- EM
+delete from dbt_schema."GPR_EM_DIM_CLIENT";
 delete from dbt_schema."GPR_EM_DIM_CARD";
 
 -- META

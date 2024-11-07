@@ -5,7 +5,7 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 
 with DAG(
-  dag_id="L_cut_ods_serps.receip_post", 
+  dag_id="L_serps.profile_post_cut_ods", 
   start_date=datetime.datetime(2024, 10, 17),
   schedule_interval = None,
   catchup=False,
@@ -16,5 +16,6 @@ with DAG(
           task_id="cut_dbt",
           bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
           + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + "&& dbt run  --models models/example/ods_receipt_post_cut.sql --vars '{execution_date : {{ execution_date }}}' ", 
+          + "&& dbt run  --models models/example/ods_profile_post_cut.sql --vars '{execution_date : {{ execution_date }}}' ", 
       )
+
