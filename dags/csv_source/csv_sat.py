@@ -2,44 +2,26 @@ import os
 import json
 import datetime
 from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
+from dags_arina.subway_fold.usefull_func.create_transform_func import run_dbt_commands
 
 with DAG(
-  dag_id="L_source_csv_sat_client", 
+  dag_id="A_source_csv_sat", 
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
   template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj/sql_scripts/client_sql',
 ) as dag:
     
-# Заполнение Satellite с помощью dbt
 
-    # Данные, которые были обновлены или новые записи
-    ins_new_mod_val = BashOperator(
-          task_id="ins_new_or_modif",
-          bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
-          + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + "&& dbt run --models models/example/ins_new_or_modif_sat.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
-      )
-    
-    # Данные, которые были удалены
-    ins_del_val = BashOperator( 
-          task_id="ins_del", 
-          bash_command=f"cd /home/anarisuto-12/dbt/subway_project"  
-          + '&& source /home/anarisuto-12/dbt/venv/bin/activate'  
-          + "&& dbt run --models models/example/ins_del_sat_macros.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'",  
-      )
-    
-    # Объединение данных для вставки
-    union_ins_val = BashOperator(
-          task_id="ins_union",
-          bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
-          + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + "&& dbt run --models models/example/ins_to_sat.sql", 
-      )
+  
+    transform = PythonOperator(
+        task_id = "transform",
+        python_callable = run_dbt_commands,
+        op_kwargs={"sql_sqcripts": ["ins_new_or_modif_sat.sql", "ins_del_sat_macros.sql", "ins_to_sat.sql"]},
+        dag = dag,
+    )
     
     # Вставка всех записей в сателит
     satelite_ins = PostgresOperator(
@@ -49,7 +31,7 @@ with DAG(
         dag = dag, 
     )
     
-    # Обновляем флаги в Satellite
+   # Обновляем флаги в Satellite
     satelite_upd = PostgresOperator(
         task_id = "update_satelite",
         postgres_conn_id = 'dbt_postgres',
@@ -58,4 +40,6 @@ with DAG(
         dag = dag, 
     )
 
-ins_new_mod_val >> ins_del_val >> union_ins_val >> satelite_ins >> satelite_upd
+
+
+transform >> satelite_ins >> satelite_upd

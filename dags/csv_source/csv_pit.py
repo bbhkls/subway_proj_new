@@ -2,43 +2,26 @@ import os
 import json
 import datetime
 from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.operators.empty import EmptyOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
+from airflow.operators.python import PythonOperator
+from dags_arina.subway_fold.usefull_func.create_transform_func import run_dbt_commands
 
 with DAG(
-  dag_id="L_source_csv_pit_client", 
+  dag_id="A_source_csv_pit", 
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
   template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj/sql_scripts',
 ) as dag:
     
-# Заполнение Satellite с помощью dbt
-
-    # Вставка новых значений, если записи об экземпляре есть и данные там изменились
-    ins_mod_val = BashOperator(
-          task_id="ins_modif",
-          bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
-          + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + "&& dbt run --models models/example/ins_modif_pit.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
-      )
+# Заполнение PIT с помощью dbt
     
-    # Вставка записей о новых экземпляров
-    ins_new_val = BashOperator(
-          task_id="ins_new",
-          bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
-          + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + "&& dbt run --models models/example/ins_new_pit.sql --vars '{execution_date : {{ execution_date }}, run_id : {{ run_id }} }'", 
-      )
-    
-    # Объединение данных для вставки
-    union_ins_val = BashOperator(
-          task_id="ins_union",
-          bash_command=f"cd /home/anarisuto-12/dbt/subway_project" 
-          + '&& source /home/anarisuto-12/dbt/venv/bin/activate' 
-          + f"&& dbt run --models models/example/ins_to_pit.sql", 
-      )
+    transform = PythonOperator(
+        task_id = "transform",
+        python_callable = run_dbt_commands,
+        op_kwargs={"sql_sqcripts": ["ins_modif_pit.sql", "ins_new_pit.sql", "ins_to_pit.sql"]},
+        dag = dag,
+    )
     
     # Вставка всех записей в сателит
     pit_ins = PostgresOperator(
@@ -66,4 +49,4 @@ with DAG(
         dag = dag, 
     )
 
-ins_mod_val >> ins_new_val >> union_ins_val >> pit_ins >> pit_not_del_upd >> pit_del_upd
+transform >> pit_ins >> pit_not_del_upd >> pit_del_upd
