@@ -5,7 +5,7 @@ from airflow import DAG
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 with DAG(
-  dag_id="A_source_csv_meta", 
+  dag_id="L_source_csv_meta", 
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,

@@ -7,7 +7,7 @@ from airflow.operators.python import PythonOperator
 from dags_arina.subway_fold.usefull_func.create_transform_func import run_dbt_commands
 
 with DAG(
-  dag_id="A_source_csv_sal", 
+  dag_id="L_source_csv_sal", 
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
