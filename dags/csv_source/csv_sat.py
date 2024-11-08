@@ -7,11 +7,11 @@ from airflow.providers.postgres.operators.postgres import PostgresOperator
 from dags_arina.subway_fold.usefull_func.create_transform_func import run_dbt_commands
 
 with DAG(
-  dag_id="A_source_csv_sat", 
+  dag_id="L_source_csv_sat", 
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
-  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj/sql_scripts/client_sql',
+  template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj/sql_scripts',
 ) as dag:
     
 

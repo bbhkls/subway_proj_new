@@ -40,16 +40,6 @@ with DAG(
         wait_for_completion = True,
     )
 
-    # Модификация HUB объекта
-    trigger_hub_mod = TriggerDagRunOperator(
-        task_id='hub_mod',
-        trigger_dag_id='L_serps.receipt_post_hub_card',
-        execution_date='{{ execution_date }}',
-        trigger_run_id='{{ run_id }}',
-        reset_dag_run=True,
-        wait_for_completion = True,
-    )
-
     # Заключительный этап
     # Обновляем METА данные о выгрузке в таблице
     trigger_meta_post_mod = TriggerDagRunOperator(
@@ -61,4 +51,4 @@ with DAG(
         wait_for_completion = True,
     )
 
-trigger_post_post >> trigger_cut_post_ods >> [trigger_t_link_mod, trigger_hub_mod]>> trigger_meta_post_mod
+trigger_post_post >> trigger_cut_post_ods >> trigger_t_link_mod>> trigger_meta_post_mod

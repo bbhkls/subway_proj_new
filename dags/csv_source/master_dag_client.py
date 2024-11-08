@@ -4,7 +4,7 @@ from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from datetime import datetime
 
 with DAG(
-    dag_id = 'A_master_dag',
+    dag_id = 'L_master_dag',
     #schedule_interval= '* */1 * * *',
     schedule_interval= None,
     catchup=False,
