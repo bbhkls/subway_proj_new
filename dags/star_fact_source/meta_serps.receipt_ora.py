@@ -7,7 +7,7 @@ from airflow.operators.empty import EmptyOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 with DAG(
-  dag_id="L_source_serps.receip_post_meta", 
+  dag_id="L_source_serps.receip_ora_meta", 
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,

@@ -4,7 +4,7 @@ from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from datetime import datetime
 
 with DAG(
-    dag_id = 'L_serps.receip_post_master_dag',
+    dag_id = 'L_serps.receip_ora_master_dag',
     #schedule_interval= '* */1 * * *',
     schedule_interval= None,
     catchup=False,
@@ -13,17 +13,18 @@ with DAG(
     
     # ODS слой
     # Выгрузка из Postgres в Postgres
-    trigger_post_post = TriggerDagRunOperator(
-        task_id='post_post',
-        trigger_dag_id='L_serps.receipt_post_to_ods',
+    trigger_ora_post = TriggerDagRunOperator(
+        task_id='ora_post',
+        trigger_dag_id='L_serps.receipt_ora_to_ods',
         execution_date='{{ execution_date }}',
+        wait_for_completion = True,
         reset_dag_run=True,
     )
 
     # Обрезка ODS таблицы по текущей выгрузке
     trigger_cut_post_ods = TriggerDagRunOperator(
         task_id='cut_ods',
-        trigger_dag_id='L_serps.receip_post_cut_ods',
+        trigger_dag_id='L_serps.receip_ora_cut_ods',
         execution_date='{{ execution_date }}',
         reset_dag_run=True,
         wait_for_completion = True,
@@ -33,7 +34,7 @@ with DAG(
     # Модификация T_LINK объекта
     trigger_t_link_mod = TriggerDagRunOperator(
         task_id='t_link_mod',
-        trigger_dag_id='L_source_serps.receip_post_t_link',
+        trigger_dag_id='L_source_serps.receip_ora_t_link',
         execution_date='{{ execution_date }}',
         trigger_run_id='{{ run_id }}',
         reset_dag_run=True,
@@ -44,11 +45,11 @@ with DAG(
     # Обновляем METА данные о выгрузке в таблице
     trigger_meta_post_mod = TriggerDagRunOperator(
         task_id='meta_mod',
-        trigger_dag_id='L_source_serps.receip_post_meta',
+        trigger_dag_id='L_source_serps.receip_ora_meta',
         execution_date='{{ execution_date }}',
         trigger_run_id='{{ run_id }}',
         reset_dag_run=True,
         wait_for_completion = True,
     )
 
-trigger_post_post >> trigger_cut_post_ods >> trigger_t_link_mod>> trigger_meta_post_mod
+trigger_ora_post >> trigger_cut_post_ods >> trigger_t_link_mod>> trigger_meta_post_mod
