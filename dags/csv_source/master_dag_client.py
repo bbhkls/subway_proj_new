@@ -17,11 +17,12 @@ with DAG(
         {'task_id' : 'ora_post', 'dag_id' : 'L_from_ora_to_postgres', 'dependes_on' : 'cut_ods'}, 
         {'task_id' : 'cut_ods', 'dag_id' : 'L_cut_ods_table', 'dependes_on' : ['hub_mod', 'sat_mod', 'e_sat_mod']},
         {'task_id' : 'hub_mod', 'dag_id' : 'L_source_csv_hub', 'dependes_on' : 'same_as_link_mod'},
-        {'task_id' : 'sat_mod', 'dag_id' : 'L_source_csv_sat', 'dependes_on' : 'same_as_link_mod'},
+        {'task_id' : 'sat_mod', 'dag_id' : 'L_source_csv_m_sat', 'dependes_on' : 'same_as_link_mod'},
         {'task_id' : 'e_sat_mod', 'dag_id' : 'L_source_csv_e_sat', 'dependes_on' : 'same_as_link_mod'},
-        {'task_id' : 'same_as_link_mod', 'dag_id' : 'L_source_csv_sal', 'dependes_on' : 'pit_mod'},
-        {'task_id' : 'pit_mod', 'dag_id' : 'L_source_csv_pit', 'dependes_on' : 'dim_mod'},
-        {'task_id' : 'dim_mod', 'dag_id' : 'L_source_csv_dim', 'dependes_on' : 'meta_mod'},
+        {'task_id' : 'same_as_link_mod', 'dag_id' : 'L_source_csv_sal', 'dependes_on' : 'meta_mod'},
+        #{'task_id' : 'same_as_link_mod', 'dag_id' : 'L_source_csv_sal', 'dependes_on' : 'pit_mod'},
+        #{'task_id' : 'pit_mod', 'dag_id' : 'L_source_csv_pit', 'dependes_on' : 'dim_mod'},
+        #{'task_id' : 'dim_mod', 'dag_id' : 'L_source_csv_dim', 'dependes_on' : 'meta_mod'},
         {'task_id' : 'meta_mod', 'dag_id' : 'L_source_csv_meta', 'dependes_on' : ''},
     ]
     
