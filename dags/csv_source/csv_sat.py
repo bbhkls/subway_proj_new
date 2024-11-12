@@ -31,7 +31,7 @@ with DAG(
         dag = dag, 
     )
     
-   # Обновляем флаги в Satellite
+    # Обновляем флаги в Satellite
     satelite_upd = PostgresOperator(
         task_id = "update_satelite",
         postgres_conn_id = 'dbt_postgres',
