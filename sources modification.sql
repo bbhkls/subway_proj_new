@@ -13,7 +13,6 @@ create table profile_card_post (
   
 -- DROP
 drop table profile_card_post;
-drop table receipt_post;
 
 -- SELECT
 select * from serps.profile_card_post;

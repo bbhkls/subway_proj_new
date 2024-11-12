@@ -27,7 +27,7 @@ with DAG(
     satelite_ins = PostgresOperator(
         task_id = "ins_m_satelite",
         postgres_conn_id = 'dbt_postgres',
-        sql = 'Insert into dbt_schema."GPR_RV_M_CLIENT" select * from ins_to_sat',
+        sql = 'Insert into dbt_schema."GPR_RV_M_CLIENT_SUBWAY_STAR" select * from ins_to_m_sat_client_orcl',
         dag = dag, 
     )
     
@@ -36,7 +36,7 @@ with DAG(
         task_id = "update_satelite",
         postgres_conn_id = 'dbt_postgres',
         sql = 'update_(e_)sat.sql',
-        params = {"param1" : "GPR_RV_M_CLIENT", "key_p" : "client_rk"},
+        params = {"param1" : "GPR_RV_M_CLIENT_SUBWAY_STAR", "key_p" : "client_rk"},
         dag = dag, 
     )
 
