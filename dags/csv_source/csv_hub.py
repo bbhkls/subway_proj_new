@@ -14,11 +14,11 @@ with DAG(
   template_searchpath='/var/dags/dags_lisa/subway_ne/subway_proj/sql_scripts/client_sql',
 ) as dag:
     
-# # Заполнение Hub с помощью dbt
+# Заполнение Hub с помощью dbt
     transform = PythonOperator(
         task_id = "transform",
         python_callable = run_dbt_commands,
-        op_kwargs={"sql_sqcripts": ["ins_to_hub.sql"]},
+        op_kwargs={"models": ["ins_to_hub.sql"]},
         dag = dag,
     )
    

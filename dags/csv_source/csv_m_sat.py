@@ -8,7 +8,7 @@ from dags_arina.subway_fold.usefull_func.create_transform_func import run_dbt_co
 
 
 with DAG(
-  dag_id="Al_source_csv_m_sat", 
+  dag_id="L_source_csv_m_sat", 
   start_date=datetime.datetime(2024, 10, 16),
   schedule_interval = None,
   catchup=False,
@@ -21,7 +21,7 @@ with DAG(
     transform = PythonOperator(
         task_id = "transform",
         python_callable = run_dbt_commands,
-        op_kwargs={"sql_sqcripts": ["ins_del_m_sat_client_orcl.sql", "ins_new_or_modif_m_sat_client_orcl.sql", "ins_to_m_sat_client_orcl.sql"]},
+        op_kwargs={"models": ["ins_del_m_sat_client_orcl.sql", "ins_new_or_modif_m_sat_client_orcl.sql", "ins_to_m_sat_client_orcl.sql"]},
         dag = dag,
     )
 

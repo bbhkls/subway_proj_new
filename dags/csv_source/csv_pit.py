@@ -19,7 +19,7 @@ with DAG(
     transform = PythonOperator(
         task_id = "transform",
         python_callable = run_dbt_commands,
-        op_kwargs={"sql_sqcripts": ["ins_modif_pit.sql", "ins_new_pit.sql", "ins_to_pit.sql"]},
+        op_kwargs={"models": ["ins_modif_pit.sql", "ins_new_pit.sql", "ins_to_pit.sql"]},
         dag = dag,
     )
     

@@ -19,7 +19,7 @@ with DAG(
     hub_ins = PythonOperator(
      task_id = "ins_hub_client_card",
         python_callable = run_dbt_commands,
-        op_kwargs={"sql_sqcripts": ["ins_to_hub_profile_client.sql", "ins_to_hub_profile_card.sql"]},
+        op_kwargs={"models": ["ins_to_hub_profile_client.sql", "ins_to_hub_profile_card.sql"]},
         dag = dag,
     )
     
