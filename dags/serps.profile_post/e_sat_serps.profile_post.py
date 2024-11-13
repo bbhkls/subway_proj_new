@@ -23,7 +23,7 @@ with DAG(
     e_satelite_dbt_client = PythonOperator(
         task_id = "dbt_model_client",
         python_callable = run_dbt_commands,
-        op_kwargs={"sql_sqcripts": ["ins_new_or_modif_e_sat_profile_client.sql", "ins_del_e_sat_profile_client.sql", "ins_to_e_sat_profile_client.sql"]},
+        op_kwargs={"models": ["ins_new_or_modif_e_sat_profile_client.sql", "ins_del_e_sat_profile_client.sql", "ins_to_e_sat_profile_client.sql"]},
         dag = dag,
     )
    
@@ -32,7 +32,7 @@ with DAG(
     e_satelite_dbt_card = PythonOperator(
         task_id = "dbt_model_card",
         python_callable = run_dbt_commands,
-        op_kwargs={"sql_sqcripts": ["ins_new_or_modif_e_sat_profile_card.sql", "ins_del_e_sat_profile_card.sql", "ins_to_e_sat_profile_card.sql"]},
+        op_kwargs={"models": ["ins_new_or_modif_e_sat_profile_card.sql", "ins_del_e_sat_profile_card.sql", "ins_to_e_sat_profile_card.sql"]},
         dag = dag,
     )
 

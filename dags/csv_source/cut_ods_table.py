@@ -18,7 +18,7 @@ with DAG(
     transform = PythonOperator(
         task_id = "transform",
         python_callable = run_dbt_commands,
-        op_kwargs={"sql_sqcripts": ["ods_client_cut.sql"]},
+        op_kwargs={"models": ["ods_client_cut.sql"]},
         dag = dag,
     )
 

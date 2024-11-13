@@ -21,7 +21,7 @@ with DAG(
     m_satellite_trf_client_pg = PythonOperator(
         task_id = "m_sat_trf_client_pg",
         python_callable = run_dbt_commands,
-        op_kwargs={"sql_sqcripts": ["ins_new_or_modif_m_sat_profile_serps.pgs.sql", "ins_del_m_sat_profile_serps.pgs.sql", "ins_to_m_sat_profile_serps.pgs.sql"]},
+        op_kwargs={"models": ["ins_new_or_modif_m_sat_profile_serps.pgs.sql", "ins_del_m_sat_profile_serps.pgs.sql", "ins_to_m_sat_profile_serps.pgs.sql"]},
         dag = dag,
     )
 

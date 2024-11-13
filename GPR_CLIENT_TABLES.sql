@@ -27,6 +27,7 @@ CREATE TABLE dbt_schema."GPR_RV_M_CLIENT_SUBWAY_STAR" (
 	age_cnt integer
 );
 
+
 CREATE TABLE dbt_schema."GPR_RV_M_CLIENT_PROFILE_POST" (
 	dataflow_id text,
 	dataflow_dttm timestamp,
