@@ -36,8 +36,8 @@ CREATE TABLE dbt_schema.metadata_airflow_test ( -- rename on metadata in future
 );
 
 -- DROP
-drop table dbt_schema.ods_profile_card_post;;
-drop table dbt_schema.ods_profile_card_post_cut;;
+drop table dbt_schema.ods_profile_card_post;
+drop table dbt_schema.ods_profile_card_post_cut;
 drop table dbt_schema.ods_receipt_post;
 drop table dbt_schema.ods_receipt_post_cut;
 drop table dbt_schema.metadata_airflow_test;

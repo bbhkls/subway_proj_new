@@ -27,6 +27,21 @@ CREATE TABLE dbt_schema."GPR_RV_M_CLIENT_SUBWAY_STAR" (
 	age_cnt integer
 );
 
+CREATE TABLE dbt_schema."GPR_RV_M_CLIENT_PRFOLIE_POST" (
+	dataflow_id text,
+	dataflow_dttm timestamp,
+	source_system_dk oid,
+	client_rk text,
+	row_num integer,
+	valid_from_dttm timestamp,
+	hashdiff_key text,
+	actual_flg integer,
+	delete_flg integer,
+	FIO_desc text,
+	phone_desc varchar,
+	birthday_dt date
+);
+
 CREATE TABLE dbt_schema."GPR_RV_E_CLIENT" (
 	dataflow_id varchar,
 	dataflow_dttm timestamp,
@@ -73,6 +88,7 @@ CREATE TABLE dbt_schema."GPR_EM_DIM_CLIENT" (
 -- DROP
 drop table dbt_schema."GPR_RV_H_CLIENT";
 drop table dbt_schema."GPR_RV_M_CLIENT_SUBWAY_STAR";
+drop table dbt_schema."GPR_RV_M_CLIENT_PRFOLIE_POST";
 drop table dbt_schema."GPR_RV_E_CLIENT";
 drop table dbt_schema."GPR_BV_A_CLIENT";
 drop table dbt_schema."GPR_BV_P_CLIENT";
@@ -82,6 +98,7 @@ drop table dbt_schema."GPR_EM_DIM_CLIENT";
 -- RV
 select * from dbt_schema."GPR_RV_H_CLIENT";
 select * from dbt_schema."GPR_RV_M_CLIENT_SUBWAY_STAR";
+select * from dbt_schema."GPR_RV_M_CLIENT_PRFOLIE_POST";
 select * from dbt_schema."GPR_RV_E_CLIENT";
 
 -- BV
@@ -98,6 +115,7 @@ select * from dbt_schema.metadata_airflow_test;
 -- RV
 delete from dbt_schema."GPR_RV_H_CLIENT";
 delete from dbt_schema."GPR_RV_M_CLIENT_SUBWAY_STAR";
+delete from dbt_schema."GPR_RV_M_CLIENT_PRFOLIE_POST";
 delete from dbt_schema."GPR_RV_E_CLIENT";
 
 -- BV
