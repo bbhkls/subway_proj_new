@@ -23,7 +23,7 @@ with DAG(
     satelite_dbt_client = PythonOperator(
         task_id = "dbt_model_client",
         python_callable = run_dbt_commands,
-        op_kwargs={"sql_sqcripts": ["ins_new_or_modif_sat_profile_client.sql", "ins_del_sat_profile_client.sql", "ins_to_sat_profile_client.sql"]},
+        op_kwargs={"sql_sqcripts": ["ins_new_or_modif_m_sat_profile_serps.sql", "ins_del_m_sat_profile_serps.sql", "ins_to_m_sat_profile_serps.sql"]},
         dag = dag,
     )
    
@@ -43,7 +43,7 @@ with DAG(
     satelite_ins_client = PostgresOperator(
         task_id = "ins_satelite_client",
         postgres_conn_id = 'dbt_postgres',
-        sql = 'Insert into dbt_schema."GPR_RV_S_PROFILE_CLIENT_POST" select * from ins_to_sat_profile_client',
+        sql = 'Insert into dbt_schema."GPR_RV_M_CLIENT_PROFILE_POST" select * from ins_to_m_sat_profile_serps',
         dag = dag, 
     )
     
@@ -64,7 +64,7 @@ with DAG(
         task_id = "update_satelite_client",
         postgres_conn_id = 'dbt_postgres',
         sql = 'update_(e_)sat.sql',
-        params = {"param1" : "GPR_RV_S_PROFILE_CLIENT_POST", "key_p" : "client_rk" },
+        params = {"param1" : "GPR_RV_M_CLIENT_PROFILE_POST", "key_p" : "client_rk" },
         dag = dag, 
     )
 

@@ -1,2 +1,4 @@
 __pycache__/
 .vscode/
+csv_model/new_out.csv
+csv_model/new_receipt_out.csv
