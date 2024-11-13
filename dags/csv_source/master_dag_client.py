@@ -15,7 +15,7 @@ with DAG(
     ALL_DAGS = [
         
         {'task_id' : 'ora_post', 'dag_id' : 'L_from_ora_to_postgres', 'dependes_on' : 'cut_ods'}, 
-        {'task_id' : 'cut_ods', 'dag_id' : 'L_cut_ods_table', 'dependes_on' : ['hub_mod', 'sat_mod', 'e_sat_mod']},
+        {'task_id' : 'cut_ods', 'dag_id' : 'L_cut_ods_table', 'dependes_on' : ['hub_mod', 'sat_mod', 'e_sat_mod', 'm_sat_mod']},
         {'task_id' : 'hub_mod', 'dag_id' : 'L_source_csv_hub', 'dependes_on' : 'same_as_link_mod'},
         {'task_id' : 'sat_mod', 'dag_id' : 'L_source_csv_m_sat', 'dependes_on' : 'same_as_link_mod'},
         {'task_id' : 'e_sat_mod', 'dag_id' : 'L_source_csv_e_sat', 'dependes_on' : 'same_as_link_mod'},
