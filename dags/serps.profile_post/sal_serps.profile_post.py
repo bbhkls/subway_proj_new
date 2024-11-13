@@ -39,3 +39,4 @@ with DAG(
     )
 
 transform >> ins_to_sal >> sal_upd
+
