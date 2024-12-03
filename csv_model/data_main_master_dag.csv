@@ -1,3 +1,0 @@
-master_ora_post,A_master_dag,serps.master_profile_post
-serps.master_profile_post,L_serps.profile_post_master,master_star_fact_source
-master_star_fact_source,L_serps.receip_post_master_dag,
